@@ -89,7 +89,7 @@ export function handleTransfer(event: Transfer): void {
       transaction.mints = mints.concat([mint.id])
 
       // save entities
-      // transaction.save()
+      transaction.save()
       factory.save()
     }
   }
@@ -117,7 +117,7 @@ export function handleTransfer(event: Transfer): void {
     // against unintended side effects for other code paths.
     burns.push(burn.id)
     transaction.burns = burns
-    // transaction.save()
+    transaction.save()
   }
 
   // burn
@@ -190,7 +190,7 @@ export function handleTransfer(event: Transfer): void {
       burns.push(burn.id)
     }
     transaction.burns = burns
-    // transaction.save()
+    transaction.save()
   }
 
   if (from.toHexString() != ADDRESS_ZERO && from.toHexString() != pair.id) {
@@ -231,7 +231,7 @@ export function handleSync(event: Sync): void {
   if (pair.reserve0.notEqual(ZERO_BD)) pair.token1Price = pair.reserve1.div(pair.reserve0)
   else pair.token1Price = ZERO_BD
 
-  // pair.save()
+   pair.save()
 
   // update ETH price now that reserves could have changed
   let bundle = Bundle.load('1')
@@ -240,8 +240,8 @@ export function handleSync(event: Sync): void {
 
   token0.derivedETH = findEthPerToken(token0 as Token)
   token1.derivedETH = findEthPerToken(token1 as Token)
-  // token0.save()
-  // token1.save()
+  token0.save()
+  token1.save()
 
   // get tracked liquidity - will be 0 if neither is in whitelist
   let trackedLiquidityETH: BigDecimal
@@ -466,7 +466,7 @@ export function handleSwap(event: Swap): void {
   pair.volumeToken1 = pair.volumeToken1.plus(amount1Total)
   pair.untrackedVolumeUSD = pair.untrackedVolumeUSD.plus(derivedAmountUSD)
   pair.txCount = pair.txCount.plus(ONE_BI)
-  // pair.save()
+  pair.save()
 
   // update global values, only used tracked amounts for volume
   let uniswap = UniswapFactory.load(FACTORY_ADDRESS)

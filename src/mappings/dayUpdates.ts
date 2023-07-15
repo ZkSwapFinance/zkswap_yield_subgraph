@@ -55,7 +55,7 @@ export function updatePairDayData(pair: Pair, event: ethereum.Event): PairDayDat
   pairDayData.reserve1 = pair.reserve1
   pairDayData.reserveUSD = pair.reserveUSD
   pairDayData.dailyTxns = pairDayData.dailyTxns.plus(ONE_BI)
-  //pairDayData.save()
+  pairDayData.save()
 
   return pairDayData as PairDayData
 }
@@ -84,7 +84,7 @@ export function updatePairHourData(pair: Pair, event: ethereum.Event): PairHourD
   pairHourData.reserve1 = pair.reserve1
   pairHourData.reserveUSD = pair.reserveUSD
   pairHourData.hourlyTxns = pairHourData.hourlyTxns.plus(ONE_BI)
-  //pairHourData.save()
+  pairHourData.save()
 
   return pairHourData as PairHourData
 }
@@ -115,7 +115,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, bundle: 
   tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)
   tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityETH.times(bundle.ethPrice)
   tokenDayData.dailyTxns = tokenDayData.dailyTxns.plus(ONE_BI)
-  //tokenDayData.save()
+  tokenDayData.save()
 
   /**
    * @todo test if this speeds up sync
