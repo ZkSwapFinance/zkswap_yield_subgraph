@@ -37,13 +37,12 @@ export function getEthPriceInUSD(): BigDecimal {
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
-  '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91', // WETH
+  WETH_ADDRESS,
   '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4', // USDC
   '0x493257fD37EDB34451f62EDf8D2a0C418852bA4C', // USDT
 ]
 
 let BLACKLIST: string[] = [
-  "0x5d76fa95c308fce88d347556785dd1dd44416272"
 ]
 
 export function isOnWhitelist(token: string): boolean {
@@ -107,27 +106,6 @@ export function getTrackedVolumeUSD(
 ): BigDecimal {
   let price0 = token0.derivedETH.times(bundle.ethPrice)
   let price1 = token1.derivedETH.times(bundle.ethPrice)
-
-  // if less than 1 LPs, require high minimum reserve amount amount or return 0
-  /**if (pair.liquidityProviderCount.lt(BigInt.fromI32(1))) {
-    let reserve0USD = pair.reserve0.times(price0)
-    let reserve1USD = pair.reserve1.times(price1)
-    if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
-      if (reserve0USD.plus(reserve1USD).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
-        return ZERO_BD
-      }
-    }
-    if (WHITELIST.includes(token0.id) && !WHITELIST.includes(token1.id)) {
-      if (reserve0USD.times(BigDecimal.fromString('2')).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
-        return ZERO_BD
-      }
-    }
-    if (!WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
-      if (reserve1USD.times(BigDecimal.fromString('2')).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
-        return ZERO_BD
-      }
-    }
-  }*/
 
   // both are whitelist tokens, take average of both amounts
   if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {

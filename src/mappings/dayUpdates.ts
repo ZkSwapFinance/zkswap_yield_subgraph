@@ -23,7 +23,7 @@ export function updateUniswapDayData(uniswap: UniswapFactory, event: ethereum.Ev
   uniswapDayData.totalLiquidityUSD = uniswap.totalLiquidityUSD
   uniswapDayData.totalLiquidityETH = uniswap.totalLiquidityETH
   uniswapDayData.txCount = uniswap.txCount
-  //uniswapDayData.save()
+  uniswapDayData.save()
 
   return uniswapDayData as UniswapDayData
 }

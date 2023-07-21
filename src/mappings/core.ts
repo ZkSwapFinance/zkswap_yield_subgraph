@@ -8,6 +8,7 @@ import {
   Mint as MintEvent,
   Burn as BurnEvent,
   Swap as SwapEvent,
+  TransferEvent,
   Bundle
 } from '../types/schema'
 import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../types/templates/Pair/Pair'
@@ -22,8 +23,11 @@ import {
   createLiquidityPosition,
   ZERO_BD,
   BI_18,
-  createLiquiditySnapshot
+  createLiquiditySnapshot,
+  FEE_TO
 } from './helpers'
+import { cumPointTracker } from './cumpoint'
+// import { cumpointCalculate } from './cumpoint'
 
 function isCompleteMint(mintId: string): boolean {
   return MintEvent.load(mintId).sender !== null // sufficient checks
@@ -62,6 +66,13 @@ export function handleTransfer(event: Transfer): void {
     transaction.swaps = []
   }
 
+  if(from.toHexString() == ADDRESS_ZERO && to.toHexString() == event.transaction.from.toHexString()){
+    cumPointTracker(value, event.block.timestamp, event.transaction.from as Address, pair as Pair, true, event.transaction.hash)
+  }
+
+  if(from.toHexString() == event.transaction.from.toHexString() && to.toHexString() == pair.id){
+    cumPointTracker(value, event.block.timestamp, event.transaction.from as Address, pair as Pair, false, event.transaction.hash)
+  }
   // mints
   let mints = transaction.mints
   if (from.toHexString() == ADDRESS_ZERO) {
@@ -323,8 +334,8 @@ export function handleMint(event: Mint): void {
   mint.save()
 
   // update the LP position
-  //let liquidityPosition = createLiquidityPosition(event.address, mint.to as Address)
-  //createLiquiditySnapshot(liquidityPosition, event)
+  let liquidityPosition = createLiquidityPosition(event.address, mint.to as Address)
+  createLiquiditySnapshot(liquidityPosition, event)
 
   // update day entities
   let dpd = updatePairDayData(pair as Pair, event)
@@ -377,6 +388,7 @@ export function handleBurn(event: Burn): void {
   // update txn counts
   uniswap.txCount = uniswap.txCount.plus(ONE_BI)
   pair.txCount = pair.txCount.plus(ONE_BI)
+
 
   // update global counter and save
   token0.save()

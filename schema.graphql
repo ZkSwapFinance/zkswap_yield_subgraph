@@ -297,3 +297,27 @@ type TokenDayData @entity {
   # price stats
   priceUSD: BigDecimal!
 }
+
+type CumpointEvent @entity {
+  id: ID!
+  pair: Pair!
+  user: Bytes!
+  isAddLiquidity: Boolean!
+  liquidity: BigDecimal!
+  timestamp: BigInt!
+}
+
+type CumPoint @entity {
+  id: ID!
+  user: Bytes!
+  currentBalance: BigDecimal!
+  lastUpdate: BigInt!
+  events: [CumpointEvent!]!
+}
+
+type TransferEvent @entity {
+  id: ID!
+  from: Bytes!
+  to: Bytes!
+  liquidity: BigDecimal!
+}
