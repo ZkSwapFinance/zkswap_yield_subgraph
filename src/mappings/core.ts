@@ -237,10 +237,10 @@ export function handleSync(event: Sync): void {
   pair.reserve0 = convertTokenToDecimal(event.params.reserve0, token0.decimals)
   pair.reserve1 = convertTokenToDecimal(event.params.reserve1, token1.decimals)
 
-  if (pair.reserve1.notEqual(ZERO_BD)) pair.token0Price = pair.reserve0.div(pair.reserve1)
-  else pair.token0Price = ZERO_BD
-  if (pair.reserve0.notEqual(ZERO_BD)) pair.token1Price = pair.reserve1.div(pair.reserve0)
+  if (pair.reserve1.notEqual(ZERO_BD)) pair.token1Price = pair.reserve0.div(pair.reserve1)
   else pair.token1Price = ZERO_BD
+  if (pair.reserve0.notEqual(ZERO_BD)) pair.token0Price = pair.reserve1.div(pair.reserve0)
+  else pair.token0Price = ZERO_BD
 
    pair.save()
 

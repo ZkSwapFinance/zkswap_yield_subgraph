@@ -1,6 +1,6 @@
 specVersion: 0.0.3
-description: Quickswap is a decentralized protocol for automated token exchange on Matic.
-repository: https://github.com/QuickSwap/QuickSwap-subgraph.git
+description: zkswap is a decentralized protocol for automated token exchange on Matic.
+repository: https://github.com/ZkSwapFinance/zkswap_yield_subgraph.git
 schema:
   file: ./schema.graphql
 dataSources:
@@ -8,7 +8,7 @@ dataSources:
     name: Factory
     network: zksync-era
     source:
-      address: '0x3a76e377ED58c8731F9DF3A36155942438744Ce3'
+      address: '0x3a76e377ed58c8731f9df3a36155942438744ce3'
       abi: Factory
       startBlock: 4182273
     mapping:

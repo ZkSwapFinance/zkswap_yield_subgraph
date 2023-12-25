@@ -4,42 +4,39 @@ import { BigDecimal } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, ONE_BD } from './helpers'
 
 
-const WETH_ADDRESS = '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91'
+const WETH_ADDRESS = '0x5aea5775959fbc2557cc8789bc1bf90a239d9a91'
 const USDC_WETH_PAIR = '0x7642e38867860d4512fcce1116e2fb539c5cdd21' // created 10008355
-const USDT_WETH_PAIR = '0xA6e443251D6b4Ecd0bf7665834838Ca8B4280A13' // created block 10093341
+const USDT_WETH_PAIR = '0xa6e443251d6b4ecd0bf7665834838ca8b4280a13' // created block 10093341
 
 
 export function getEthPriceInUSD(): BigDecimal {
-  //For now we will only use USDC_WETH pair for ETH prices
-  let usdcPair = Pair.load(USDC_WETH_PAIR);  // usdc is token0
-  let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token0
+  // fetch eth prices for each stablecoin
+  let usdtPair = Pair.load(USDT_WETH_PAIR); // usdt is token0
+  let usdcPair = Pair.load(USDC_WETH_PAIR); // usdc is token0
 
-  // all 3 have been created
   if (usdcPair !== null && usdtPair !== null) {
-    let totalLiquidityETH = usdcPair.reserve1.plus(usdtPair.reserve1)
-    let usdcWeight = usdcPair.reserve1.div(totalLiquidityETH)
-    let usdtWeight = usdtPair.reserve1.div(totalLiquidityETH)
-    return usdcPair.token0Price
-      .times(usdcWeight)
-      .plus(usdtPair.token1Price.times(usdtWeight))
-      
-  } else if (usdtPair !== null) {
-    let totalLiquidityETH = usdtPair.reserve1
-    let usdtWeight = usdtPair.reserve1.div(totalLiquidityETH)
-    return usdtPair.token1Price.times(usdtWeight)
-    
+    let totalLiquidityETH = usdcPair.reserve1.plus(usdtPair.reserve1);
+    if (totalLiquidityETH.notEqual(ZERO_BD)) {
+      let usdcWeight = usdcPair.reserve1.div(totalLiquidityETH);
+      let usdtWeight = usdtPair.reserve1.div(totalLiquidityETH);
+      return usdcPair.token1Price.times(usdcWeight).plus(usdtPair.token1Price.times(usdtWeight));
+    } else {
+      return ZERO_BD;
+    }
   } else if (usdcPair !== null) {
-    return usdcPair.token0Price
+    return usdcPair.token1Price;
+  } else if (usdtPair !== null) {
+    return usdtPair.token1Price;
   } else {
-    return ZERO_BD
+    return ZERO_BD;
   }
 }
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
   WETH_ADDRESS,
-  '0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4', // USDC
-  '0x493257fD37EDB34451f62EDf8D2a0C418852bA4C', // USDT
+  '0x3355df6d4c9c3035724fd0e3914de96a5a83aaf4', // USDC
+  '0x493257fd37edb34451f62edf8d2a0c418852ba4c', // USDT
 ]
 
 let BLACKLIST: string[] = [
