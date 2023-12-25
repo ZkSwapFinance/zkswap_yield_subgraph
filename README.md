@@ -44,7 +44,7 @@ This query fetches aggredated data from all QuickSwap pairs and tokens, to give 
 
 ```graphql
 {
-  QuickSwapFactories(first: 1) {
+  Factories(first: 1) {
     pairCount
     totalVolumeUSD
     totalLiquidityUSD
